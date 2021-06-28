@@ -61,14 +61,16 @@ exports.myOrders = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+//*ADMIN ROUTES
+
 //*get all orders => /api/v1/admin/orders
 exports.allOrders = catchAsyncErrors(async (req, res, next) => {
   const orders = await Order.find();
 
-  let totalAmount = 0
-  orders.forEach(order => {
-    totalAmount += order.totalPrice
-  })
+  let totalAmount = 0;
+  orders.forEach((order) => {
+    totalAmount += order.totalPrice;
+  });
 
   res.status(200).json({
     success: true,
@@ -76,3 +78,32 @@ exports.allOrders = catchAsyncErrors(async (req, res, next) => {
     orders,
   });
 });
+
+//*update / process orders => /api/v1/admin/order/:id
+exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order.orderStatus === 'Delivered') {
+    return next(new ErrorHandler('You have already delivered this order', 400));
+  }
+
+  order.orderItems.forEach(async (item) => {
+    await updateStock(item.product, item.quantity);
+  });
+
+  (order.orderStatus = req.body.status), (order.delivedAt = Date.now());
+
+  await order.save();
+
+  res.status(200).json({
+    success: true,
+  });
+});
+
+async function updateStock(id, quantity) {
+  const product = await Product.findById(id);
+
+  product.stock = product.stock - quantity;
+
+  await product.save({ validateBeforeSave: false });
+}
