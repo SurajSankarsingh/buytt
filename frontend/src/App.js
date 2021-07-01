@@ -1,9 +1,12 @@
+import Header from './components/Layouts/Header';
+import Footer from './components/Layouts/Footer';
 import './App.css';
 
 function App() {
   return (
     <div className='App'>
-      <h1>Buy TT</h1>
+      <Header />
+      <Footer />
     </div>
   );
 }
