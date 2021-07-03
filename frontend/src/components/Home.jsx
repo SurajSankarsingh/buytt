@@ -4,7 +4,7 @@ import MetaData from './Layouts/MetaData';
 const Home = () => {
   return (
     <>
-      <MetaData title={'Best Online Shop in T&T'}/>
+      <MetaData title={'Best Online Shop in T&T'} />
       <h1 id='products_heading'>Latest Products</h1>
 
       <section id='products' className='container mt-5'>
