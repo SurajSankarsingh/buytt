@@ -469,12 +469,12 @@ footer {
 
 /* Pagination */
 .page-item.active .page-link {
-  background-color: #fa9c23;
-  border-color: #fa9c23;
+  background-color: #db6a8c;
+  border-color: #db6a8c;
 }
 
 .page-link {
-  color: #fa9c23;
+  color: #db6a8c;
 }
 
 .page-link:hover {

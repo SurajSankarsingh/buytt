@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
 import MetaData from './Layouts/MetaData';
 import Product from './Product/Product';
 import Loader from './Layouts/Loader';
@@ -8,10 +9,12 @@ import { getProducts } from '../actions/productActions';
 import { useAlert } from 'react-alert';
 
 const Home = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const alert = useAlert();
   const dispatch = useDispatch();
 
-  const { loading, products, productsCount, error } = useSelector(
+  const { loading, products, productsCount, error, resPerPage } = useSelector(
     (state) => state.products
   );
 
@@ -19,8 +22,12 @@ const Home = () => {
     if (error) {
       return alert.error(error);
     }
-    dispatch(getProducts());
-  }, [dispatch, error, alert]);
+    dispatch(getProducts(currentPage));
+  }, [dispatch, error, alert, currentPage]);
+
+  function setCurrentPageNum(pageNumber) {
+    setCurrentPage(pageNumber);
+  }
 
   return (
     <>
@@ -39,6 +46,23 @@ const Home = () => {
                 ))}
             </div>
           </section>
+
+          {resPerPage <= productsCount && (
+            <div className='d-flex justify-content-center mt-5'>
+              <Pagination
+                activePage={currentPage}
+                itemsCountPerPage={resPerPage}
+                totalItemsCount={productsCount}
+                onChange={setCurrentPageNum}
+                nextPageText={'Next'}
+                prevPageText={'Prev'}
+                firstPageText={'First'}
+                lastPageText={'Last'}
+                itemClass='page-item'
+                linkClass='page-link'
+              />
+            </div>
+          )}
         </>
       )}
     </>
